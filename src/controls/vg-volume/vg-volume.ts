@@ -9,8 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
     selector: 'vg-volume',
     encapsulation: ViewEncapsulation.None,
     template: `
-        <div 
-            #volumeBar
+        <div #volumeBar
             class="volumeBar"
             tabindex="0"
             role="slider"
@@ -21,10 +20,11 @@ import { Subscription } from 'rxjs/Subscription';
             aria-valuemax="100"
             [attr.aria-valuetext]="ariaValue + '%'"
             (click)="onClick($event)"
-            (mousedown)="onMouseDown($event)">
+            (mousedown)="onMouseDown($event)"
+            [style.width]="hidden ? '0px' : '100px'">
             <div class="volumeBackground" [ngClass]="{dragging: isDragging}">
-                <div class="volumeValue" [style.width]="(getVolume() * (100-15)) + '%'"></div>
-                <div class="volumeKnob" [style.left]="(getVolume() * (100-15)) + '%'"></div>
+                <div class="volumeValue" [style.width]="hidden ? '0px' : (getVolume() * (100-15)) + '%'"></div>
+                <div [style.width]="hidden ? '0px' : '15px'" class="volumeKnob" [style.left]="(getVolume() * (100-15)) + '%'"></div>
             </div>
         </div>
     `,
@@ -37,8 +37,7 @@ import { Subscription } from 'rxjs/Subscription';
             user-select: none;
             display: flex;
             justify-content: center;
-            height: 50px;
-            width: 100px;
+            height: 50px
             cursor: pointer;
             color: white;
             line-height: 50px;
@@ -48,6 +47,7 @@ import { Subscription } from 'rxjs/Subscription';
             display: flex;
             flex-grow: 1;
             align-items: center;
+            cursor: pointer;
         }
         vg-volume .volumeBackground {
             display: flex;
@@ -80,6 +80,7 @@ import { Subscription } from 'rxjs/Subscription';
     ` ]
 })
 export class VgVolume implements OnInit, OnDestroy {
+    @Input() hidden: boolean;
     @Input() vgFor: string;
     @ViewChild('volumeBar') volumeBarRef: ElementRef;
 

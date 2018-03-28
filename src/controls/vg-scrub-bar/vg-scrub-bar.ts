@@ -162,88 +162,86 @@ export class VgScrubBar implements OnInit, OnDestroy {
 
     @HostListener('mousedown', [ '$event' ])
     onMouseDownScrubBar($event: any) {
-        if (this.target) {
-            if (!this.target.isLive) {
-                if (!this.vgSlider) {
-                    this.seekEnd($event.offsetX);
-                }
-                else {
-                    this.seekStart();
-                }
-            }
-        }
-    }
-
-    @HostListener('document:mousemove', [ '$event' ])
-    onMouseMoveScrubBar($event: any) {
-        if (this.target) {
-            if (!this.target.isLive && this.vgSlider && this.isSeeking) {
-                this.seekMove($event.offsetX);
-            }
-        }
-    }
-
-    @HostListener('document:mouseup', [ '$event' ])
-    onMouseUpScrubBar($event: any) {
-        if (this.target) {
-            if (!this.target.isLive && this.vgSlider && this.isSeeking) {
+        if (!this.target.isLive) {
+            if (!this.vgSlider) {
                 this.seekEnd($event.offsetX);
             }
+            else {
+                this.seekStart();
+            }
+        }
+    }
+
+    @HostListener('mousemove', [ '$event' ])
+    onMouseMoveScrubBar($event: any) {
+        if (!this.target.isLive && this.vgSlider && this.isSeeking) {
+            this.seekMove($event.offsetX);
+        }
+    }
+
+    @HostListener('mouseout', [ '$event' ])
+    onMouseOutScrubBar($event: any) {
+        if (!this.target.isLive && this.vgSlider && this.isSeeking) {
+            this.seekEnd($event.offsetX);
+        }
+    }
+
+    @HostListener('mouseup', [ '$event' ])
+    onMouseUpScrubBar($event: any) {
+        if (!this.target.isLive && this.vgSlider) {
+            this.seekEnd($event.offsetX);
         }
     }
 
     @HostListener('touchstart', [ '$event' ])
     onTouchStartScrubBar($event: any) {
-        if (this.target) {
-            if (!this.target.isLive) {
-                if (!this.vgSlider) {
-                    this.seekEnd(this.getTouchOffset($event));
-                }
-                else {
-                    this.seekStart();
-                }
+        if (!this.target.isLive) {
+            if (!this.vgSlider) {
+                this.seekEnd(this.getTouchOffset($event));
+            }
+            else {
+                this.seekStart();
             }
         }
     }
 
-    @HostListener('document:touchmove', [ '$event' ])
+    @HostListener('touchmove', [ '$event' ])
     onTouchMoveScrubBar($event: any) {
-        if (this.target) {
-            if (!this.target.isLive && this.vgSlider && this.isSeeking) {
-                this.seekMove(this.getTouchOffset($event));
-            }
+        if (!this.target.isLive && this.vgSlider && this.isSeeking) {
+            this.seekMove(this.getTouchOffset($event));
         }
     }
 
-    @HostListener('document:touchcancel', [ '$event' ])
+    @HostListener('touchcancel', [ '$event' ])
     onTouchCancelScrubBar($event: any) {
-        if (this.target) {
-            if (!this.target.isLive && this.vgSlider && this.isSeeking) {
-                this.touchEnd();
-            }
+        if (!this.target.isLive && this.vgSlider) {
+            this.touchEnd();
         }
     }
 
-    @HostListener('document:touchend', [ '$event' ])
+    @HostListener('touchend', [ '$event' ])
     onTouchEndScrubBar($event: any) {
-        if (this.target) {
-            if (!this.target.isLive && this.vgSlider && this.isSeeking) {
-                this.touchEnd();
-            }
+        if (!this.target.isLive && this.vgSlider) {
+            this.touchEnd();
+        }
+    }
+
+    @HostListener('touchleave', [ '$event' ])
+    onTouchLeaveScrubBar($event: any) {
+        if (!this.target.isLive && this.vgSlider) {
+            this.touchEnd();
         }
     }
 
     @HostListener('keydown', ['$event'])
     arrowAdjustVolume(event: KeyboardEvent) {
-        if (this.target) {
-            if (event.keyCode === 38 || event.keyCode === 39) {
-                event.preventDefault();
-                this.target.seekTime((this.target.time.current + 5000) / 1000, false);
-            }
-            else if (event.keyCode === 37 || event.keyCode === 40) {
-                event.preventDefault();
-                this.target.seekTime((this.target.time.current - 5000) / 1000, false);
-            }
+        if (event.keyCode === 38 || event.keyCode === 39) {
+            event.preventDefault();
+            this.target.seekTime((this.target.time.current + 5000) / 1000, false);
+        }
+        else if (event.keyCode === 37 || event.keyCode === 40) {
+            event.preventDefault();
+            this.target.seekTime((this.target.time.current - 5000) / 1000, false);
         }
     }
 

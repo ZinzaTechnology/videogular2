@@ -87,7 +87,21 @@
 .vg-icon-fullscreen_exit:before {
   content: "\e20d";
 }
-
+.vg-icon-theater:before {
+  content: "\e036";
+}
+.vg-icon-theater_exit:before {
+  content: "\e036";
+}
+.vg-icon-setting:before {
+  content: "\e02B";
+}
+.vg-icon-info:before {
+  content: "\e02C";
+}
+.vg-icon-close:before {
+  content: "\e02D";
+}
 vg-player video {
     width: 100%;
     height: 100%;

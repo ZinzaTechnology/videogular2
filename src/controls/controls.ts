@@ -14,6 +14,10 @@ import { VgTimeDisplay, VgUtcPipe } from './vg-time-display/vg-time-display';
 import { VgTrackSelector } from './vg-track-selector/vg-track-selector';
 import { VgControlsHidden } from './../core/services/vg-controls-hidden';
 
+import { VgScrubBarThumbnails } from './vg-scrub-bar/vg-scrub-bar-thumbnails/vg-scrub-bar-thumbnails';
+import { VgNext } from './vg-next/vg-next';
+import { VgTheater } from './vg-theater/vg-theater';
+
 @NgModule({
     imports: [ CommonModule ],
     declarations: [
@@ -26,10 +30,13 @@ import { VgControlsHidden } from './../core/services/vg-controls-hidden';
         VgScrubBar,
         VgScrubBarBufferingTime,
         VgScrubBarCuePoints,
+        VgScrubBarThumbnails,
         VgScrubBarCurrentTime,
         VgTimeDisplay,
         VgUtcPipe,
-        VgTrackSelector
+        VgTrackSelector,
+        VgNext,
+        VgTheater
     ],
     exports: [
         VgControls,
@@ -41,10 +48,13 @@ import { VgControlsHidden } from './../core/services/vg-controls-hidden';
         VgScrubBar,
         VgScrubBarBufferingTime,
         VgScrubBarCuePoints,
+        VgScrubBarThumbnails,
         VgScrubBarCurrentTime,
         VgTimeDisplay,
         VgUtcPipe,
-        VgTrackSelector
+        VgTrackSelector,
+        VgNext,
+        VgTheater
     ],
     providers: [ VgControlsHidden ]
 })

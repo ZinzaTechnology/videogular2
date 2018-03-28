@@ -1,24 +1,23 @@
-import { Component, Input, ElementRef, HostListener, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { VgAPI } from '../../core/services/vg-api';
+import { VgFullscreenAPI } from '../../core/services/vg-fullscreen-api';
 import { Subscription } from 'rxjs/Subscription';
 
 
 @Component({
-    selector: 'vg-mute',
+    selector: 'vg-theater',
     encapsulation: ViewEncapsulation.None,
     template: `
         <div class="icon"
-             [class.vg-icon-volume_up]="getVolume() >= 0.75"
-             [class.vg-icon-volume_down]="getVolume() >= 0.25 && getVolume() < 0.75"
-             [class.vg-icon-volume_mute]="getVolume() > 0 && getVolume() < 0.25"
-             [class.vg-icon-volume_off]="getVolume() === 0"
+             [class.vg-icon-theater]="!isTheater"
+             [class.vg-icon-theater_exit]="isTheater"
              tabindex="0"
              role="button"
-             aria-label="mute button"
+             aria-label="theater button"
              [attr.aria-valuetext]="ariaValue">
         </div>`,
     styles: [ `
-        vg-mute {
+        vg-theater {
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             -khtml-user-select: none;
@@ -34,24 +33,24 @@ import { Subscription } from 'rxjs/Subscription';
             line-height: 50px;
         }
 
-        vg-mute .icon {
+        vg-theater .icon {
             pointer-events: none;
         }
     ` ]
 })
-export class VgMute implements OnInit, OnDestroy {
-    @Input() vgFor: string;
+export class VgTheater implements OnInit, OnDestroy {
     elem: HTMLElement;
-    target: any;
-
-    currentVolume: number;
+    vgFor: string;
+    target: Object;
+    isTheater: boolean = false;
 
     subscriptions: Subscription[] = [];
 
-    ariaValue = 'unmuted';
+    ariaValue = 'normal mode';
 
-    constructor(ref: ElementRef, public API: VgAPI) {
+    constructor(ref: ElementRef, public API: VgAPI, public fsAPI: VgFullscreenAPI) {
         this.elem = ref.nativeElement;
+        this.subscriptions.push(this.fsAPI.onChangeFullscreen.subscribe(this.onChangeTheater.bind(this)));
     }
 
     ngOnInit() {
@@ -65,12 +64,16 @@ export class VgMute implements OnInit, OnDestroy {
 
     onPlayerReady() {
         this.target = this.API.getMediaById(this.vgFor);
-        this.currentVolume = this.target.volume;
+    }
+
+    onChangeTheater(fsState: boolean) {
+        this.ariaValue = fsState ? 'theater mode' : 'normal mode';
+        this.isTheater = fsState;
     }
 
     @HostListener('click')
     onClick() {
-        this.changeMuteState();
+        this.changeTheaterState();
     }
 
     @HostListener('keydown', ['$event'])
@@ -78,26 +81,18 @@ export class VgMute implements OnInit, OnDestroy {
         // On press Enter (13) or Space (32)
         if (event.keyCode === 13 || event.keyCode === 32) {
             event.preventDefault();
-            this.changeMuteState();
+            this.changeTheaterState();
         }
     }
 
-    changeMuteState() {
-        let volume = this.getVolume();
+    changeTheaterState() {
+        let element = this.target;
 
-        if (volume === 0) {
-            this.target.volume = this.currentVolume;
+        if (this.target instanceof VgAPI) {
+            element = null;
         }
-        else {
-            this.currentVolume = volume;
-            this.target.volume = 0;
-        }
-    }
 
-    getVolume() {
-        const volume = this.target ? this.target.volume : 0;
-        this.ariaValue = volume ? 'unmuted' : 'muted';
-        return volume;
+        this.fsAPI.toggleFullscreen(element);
     }
 
     ngOnDestroy() {

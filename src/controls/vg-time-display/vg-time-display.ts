@@ -48,7 +48,7 @@ export class VgUtcPipe implements PipeTransform {
             display: flex;
             justify-content: center;
             height: 50px;
-            width: 60px;
+            width: 40px;
             cursor: pointer;
             color: white;
             line-height: 50px;

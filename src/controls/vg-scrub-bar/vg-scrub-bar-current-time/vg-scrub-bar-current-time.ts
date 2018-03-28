@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, Input, ElementRef, OnInit, ViewEncapsulation, OnDestroy, HostListener } from '@angular/core';
 import { VgAPI } from '../../../core/services/vg-api';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -77,5 +77,10 @@ export class VgScrubBarCurrentTime implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.subscriptions.forEach(s => s.unsubscribe());
+    }
+
+    @HostListener('mousemove', [ '$event' ])
+    onMouseMoveThumbnailBar($event: any) {
+        //console.log($event);
     }
 }

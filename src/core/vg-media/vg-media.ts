@@ -8,7 +8,6 @@ import { VgStates } from '../states/vg-states';
 import { VgAPI } from '../services/vg-api';
 import { VgEvents } from '../events/vg-events';
 import { Subject } from 'rxjs/Subject';
-import { IMediaElement } from './i-media-element';
 
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/combineLatest';
@@ -19,24 +18,24 @@ import 'rxjs/add/observable/combineLatest';
 export class VgMedia implements OnInit, OnDestroy, IPlayable {
     elem: any;
 
-    @Input() vgMedia: IMediaElement;
+    @Input() vgMedia: any;
     @Input() vgMaster: boolean;
 
     state: string = VgStates.VG_PAUSED;
 
     time: any = { current: 0, total: 0, left: 0 };
     buffer: any = { end: 0 };
-    track: any;
     subscriptions: IMediaSubscriptions | any;
 
     canPlay: boolean = false;
     canPlayThrough: boolean = false;
+    isBufferDetected: boolean = false;
     isMetadataLoaded: boolean = false;
+    isReadyToPlay: boolean = false;
     isWaiting: boolean = false;
     isCompleted: boolean = false;
     isLive: boolean = false;
 
-    isBufferDetected: boolean = false;
 
     checkInterval: number = 200;
     currentPlayPos: number = 0;
@@ -251,8 +250,6 @@ export class VgMedia implements OnInit, OnDestroy, IPlayable {
                     // deliberately empty for the sake of eating console noise
                 });
         }
-
-        return this.playPromise;
     }
 
     pause() {
